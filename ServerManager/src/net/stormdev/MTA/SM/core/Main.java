@@ -1,10 +1,9 @@
 package net.stormdev.MTA.SM.core;
 
 import net.stormdev.MTA.SM.connections.ConnectionListener;
-import net.stormdev.MTA.SM.connections.Message;
+import net.stormdev.MTA.SM.connections.ConnectionManager;
 import net.stormdev.MTA.SM.events.EventManager;
 import net.stormdev.MTA.SM.messaging.Encrypter;
-import net.stormdev.MTA.SM.messaging.MessageEvent;
 import net.stormdev.MTA.SM.messaging.MessageListener;
 import net.stormdev.MTA.SM.utils.Scheduler;
 
@@ -16,6 +15,8 @@ public class Main {
 	public static boolean running = true;
 	private boolean ending = false;
 	private ConnectionListener connectionListener;
+	
+	public ConnectionManager connections;
 	public EventManager eventManager;
 	public Encrypter encrypter;
 	
@@ -83,10 +84,12 @@ public class Main {
 		}
 		
 		new Scheduler(); //Initialize it
-		connectionListener = new ConnectionListener(port);
-		eventManager = new EventManager();
 		
+		eventManager = new EventManager();
 		new MessageListener();
+		
+		connections = new ConnectionManager();
+		connectionListener = new ConnectionListener(port);
 		
 		Core.logger.info("Running!");
 		

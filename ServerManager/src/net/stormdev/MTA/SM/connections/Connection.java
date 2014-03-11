@@ -1,7 +1,7 @@
 package net.stormdev.MTA.SM.connections;
 
 public interface Connection {
-	public String getServerID();
+	public String getConnectionID();
 	public void sendMsg(String title, String msg, String from);
 	public void sendMsg(Message message);
 	public void rawMsg(String msg);

@@ -7,12 +7,11 @@ public class ServerConnection implements Connection {
 	private ConnectionInterpreter manager;
 	private String id;
 	public ServerConnection(ConnectionInterpreter interpreter, String serverId){
-		//TODO Register ourselves
 		this.id = serverId;
 		this.manager = interpreter;
 	}
 
-	public String getServerID() {
+	public String getConnectionID() {
 		return id;
 	}
 

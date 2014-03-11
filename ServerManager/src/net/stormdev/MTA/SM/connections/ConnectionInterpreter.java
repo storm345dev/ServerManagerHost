@@ -40,6 +40,10 @@ public class ConnectionInterpreter implements Runnable {
 		this.socket = socket;
 	}
 	
+	public Connection getConnection(){
+		return connection;
+	}
+	
 	public boolean isIdentified(){
 		return indentified;
 	}
@@ -67,10 +71,16 @@ public class ConnectionInterpreter implements Runnable {
 			if(inFromClient != null){
 				inFromClient.close();
 			}
+			if(isIdentified()){
+				Core.instance.connections.unregisterConnection(id);
+			}
 		} catch (IOException e) {
-			//Whatever
+			// Whatever
+			e.printStackTrace();
 		}
-		open = false;
+		finally {
+			open = false;
+		}
 	}
 	
 	public void start(){
@@ -158,7 +168,7 @@ public class ConnectionInterpreter implements Runnable {
 				String line;
 				while((line = inFromClient.readLine()) != null){
 					lastMessage = System.currentTimeMillis(); //Make sure we know it's still responsive
-					//TODO Recieved message : line
+					//Recieved message : line
 					if(line.equalsIgnoreCase("close")){
 						close();
 						return;
@@ -187,12 +197,21 @@ public class ConnectionInterpreter implements Runnable {
 							indentified = true;
 							
 							if(server){
-								//TODO Create a new Server Connection
+								//Create a new Server Connection
 								connection = new ServerConnection(this, id);
+								boolean exists = !Core.instance.connections.registerConnection(connection);
+								if(exists){
+									indentified = false;
+									rawMsg("alreadyConnected");
+									rawMsg("close");
+									close();
+									return;
+								}
 							}
 							else{
 								rawMsg("unsupportedOperation");
 								rawMsg("close");
+								indentified = false;
 								close();
 								Core.logger.warning("Attempted connection from a non-server user! This version of ServerManager doesn't support such connections!");
 								//TODO Create connections for non-servers (Eg. site users, app users)
