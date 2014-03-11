@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.stormdev.MTA.SM.connections.Message;
+import net.stormdev.MTA.SM.connections.TransitMessage;
 
 public class Encrypter {
 	
@@ -78,6 +79,6 @@ public class Encrypter {
 		String test = fromChanged(
 				change(
 						change(rand)  )  );
-		return rand.equals(test) && Message.test();
+		return rand.equals(test) && Message.test() && TransitMessage.test();
 	}
 }
