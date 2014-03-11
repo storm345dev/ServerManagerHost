@@ -4,6 +4,8 @@ import net.stormdev.MTA.SM.connections.ConnectionListener;
 import net.stormdev.MTA.SM.connections.Message;
 import net.stormdev.MTA.SM.events.EventManager;
 import net.stormdev.MTA.SM.messaging.Encrypter;
+import net.stormdev.MTA.SM.messaging.MessageEvent;
+import net.stormdev.MTA.SM.messaging.MessageListener;
 import net.stormdev.MTA.SM.utils.Scheduler;
 
 public class Main {
@@ -83,6 +85,8 @@ public class Main {
 		new Scheduler(); //Initialize it
 		connectionListener = new ConnectionListener(port);
 		eventManager = new EventManager();
+		
+		new MessageListener();
 		
 		Core.logger.info("Running!");
 		

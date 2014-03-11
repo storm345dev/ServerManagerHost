@@ -5,26 +5,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.stormdev.MTA.SM.core.Core;
+
 public class EventManager {
-	private volatile Map<Event, List<Listener<?>>> handlers = new HashMap<Event, List<Listener<?>>>();
+	private volatile Map<Class<Event>, List<Listener<?>>> handlers = new HashMap<Class<Event>, List<Listener<?>>>();
 	
 	public EventManager(){
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public synchronized <T extends Event> void registerListener(T event, Listener<T> listener){
 		List<Listener<?>> handles = new ArrayList<Listener<?>>();
 		if(handlers.containsKey(event)){
 			handles = handlers.get(event);
 		}
+		Core.logger.debug("Registered listener "+listener.toString());
 		handles.add(listener);
-		handlers.put(event, handles);
+		handlers.put((Class<Event>) event.getClass(), handles);
 	}
 	
 	public <T extends Event> T callEvent(T event){
 		List<Listener<?>> handles = new ArrayList<Listener<?>>();
-		if(handlers.containsKey(event)){
-			handles = handlers.get(event);
+		@SuppressWarnings("unchecked")
+		Class<Event> c = (Class<Event>) event.getClass();
+		
+		if(handlers.containsKey(c)){
+			handles = handlers.get(c);
 		}
 		
 		for(Listener<?> l:handles){
@@ -34,6 +41,7 @@ public class EventManager {
 				list.onCall(event);
 			} catch (Exception e) {
 				//Wrong listener in list
+				e.printStackTrace();
 				continue;
 			}
 		}
