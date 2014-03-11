@@ -66,7 +66,6 @@ public class ConnectionInterpreter implements Runnable {
 	}
 	
 	public void close(){
-		Core.logger.debug("Closing connection");
 		try {
 			if(out != null){
 				out.close();
@@ -84,7 +83,6 @@ public class ConnectionInterpreter implements Runnable {
 		finally {
 			open = false;
 		}
-		//new RuntimeException("Connection closed!").printStackTrace();
 	}
 	
 	public void start(){

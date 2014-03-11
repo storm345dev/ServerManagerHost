@@ -20,11 +20,12 @@ public class ConnectionManager {
 			return false; //Sorry already exists :(
 		}
 		connections.put(connectionId, con);
-		Core.logger.debug("New server connection! "+con.getConnectionID());
+		Core.logger.info("Server connected: "+con.getConnectionID());
 		return true;
 	}
 	
 	public synchronized void unregisterConnection(String connectionId){
+		Core.logger.info("Server disconnected: "+connectionId);
 		connections.remove(connectionId);
 	}
 	
