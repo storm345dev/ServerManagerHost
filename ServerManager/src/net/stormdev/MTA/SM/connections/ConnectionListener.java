@@ -30,7 +30,7 @@ public class ConnectionListener {
 			Core.logger.info("Listening to packets!");
 			while(Main.running){
 				Socket clientSocket = socket.accept();
-				ConnectionReader reader = new ConnectionReader(clientSocket);
+				ConnectionInterpreter reader = new ConnectionInterpreter(clientSocket);
 				reader.start();
 			}
 			if(!Main.running){
