@@ -9,11 +9,9 @@ import net.stormdev.MTA.SM.utils.Scheduler;
 
 public class ConnectionListener {
 	
-	private Main main;
 	private int port;
 	
 	public ConnectionListener(int port){
-		this.main = Core.instance;
 		this.port = port;
 		Scheduler.instance.runTaskAsync(new Runnable(){
 

@@ -14,8 +14,8 @@ public class Main {
 	
 	public static boolean running = true;
 	private boolean ending = false;
-	private ConnectionListener connectionListener;
 	
+	public ConnectionListener connectionListener;
 	public ConnectionManager connections;
 	public EventManager eventManager;
 	public Encrypter encrypter;

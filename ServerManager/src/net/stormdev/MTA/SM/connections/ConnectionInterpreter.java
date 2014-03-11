@@ -117,6 +117,9 @@ public class ConnectionInterpreter implements Runnable {
 					} catch (InterruptedException e) {
 					} 
 				}
+				if(isOpen()){
+					close();
+				}
 				return;
 			}});
 	}
