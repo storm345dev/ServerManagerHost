@@ -38,7 +38,6 @@ public class ConnectionInterpreter implements Runnable {
 	private volatile List<String> outboundQueue = new ArrayList<String>();
 	
 	public ConnectionInterpreter(Socket socket){
-		Core.logger.debug("Received connection");
 		this.socket = socket;
 	}
 	
@@ -169,7 +168,6 @@ public class ConnectionInterpreter implements Runnable {
 		}
 		
 		while(open && socket.isConnected() && !socket.isClosed()){
-			Core.logger.info("Listening...");
 			//We are listening
 			try {
 				String line;
