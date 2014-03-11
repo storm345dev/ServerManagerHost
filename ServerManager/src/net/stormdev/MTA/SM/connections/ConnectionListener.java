@@ -29,9 +29,9 @@ public class ConnectionListener {
 			ServerSocket socket = new ServerSocket(port);
 			Core.logger.info("Listening to packets!");
 			while(Main.running){
-			Socket clientSocket = socket.accept();
-			ConnectionReader reader = new ConnectionReader(clientSocket);
-			reader.start();
+				Socket clientSocket = socket.accept();
+				ConnectionReader reader = new ConnectionReader(clientSocket);
+				reader.start();
 			}
 			if(!Main.running){
 				return;
