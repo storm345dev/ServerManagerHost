@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ConnectionInterpreter implements Runnable {
 	private volatile List<String> outboundQueue = new ArrayList<String>();
 	
 	public ConnectionInterpreter(Socket socket){
+		Core.logger.debug("Received connection");
 		this.socket = socket;
 	}
 	
@@ -64,6 +66,7 @@ public class ConnectionInterpreter implements Runnable {
 	}
 	
 	public void close(){
+		Core.logger.debug("Closing connection");
 		try {
 			if(out != null){
 				out.close();
@@ -81,6 +84,7 @@ public class ConnectionInterpreter implements Runnable {
 		finally {
 			open = false;
 		}
+		//new RuntimeException("Connection closed!").printStackTrace();
 	}
 	
 	public void start(){
@@ -98,6 +102,15 @@ public class ConnectionInterpreter implements Runnable {
 					if(i < 1){ //1 time in a 40 cycle, so roughly every 5s
 					sendKeepAliveMessage();
 					checkIfAlive();
+					}
+					
+					if(!indentified){
+						long diff = System.currentTimeMillis() - startTime;
+						if(diff > 10000){ //10s since we asked to identify and no response; so just terminate the connection
+							rawMsg("close");
+							close();
+							return;
+						}
 					}
 
 					if(useSendQueue && outboundQueue.size() > 0){
@@ -127,7 +140,8 @@ public class ConnectionInterpreter implements Runnable {
 	public void connect(){
 		try {
 			inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(new DataOutputStream(socket.getOutputStream()));
+			out = new PrintWriter(new DataOutputStream(socket.getOutputStream()), true);
+			lastMessage = System.currentTimeMillis();
 			open = true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -157,17 +171,9 @@ public class ConnectionInterpreter implements Runnable {
 		}
 		
 		while(open && socket.isConnected() && !socket.isClosed()){
+			Core.logger.info("Listening...");
 			//We are listening
 			try {
-				if(!indentified){
-					long diff = System.currentTimeMillis() - startTime;
-					if(diff > 10000){ //10s since we asked to identify and no response; so just terminate the connection
-						rawMsg("close");
-						close();
-						return;
-					}
-				}
-				
 				String line;
 				while((line = inFromClient.readLine()) != null){
 					lastMessage = System.currentTimeMillis(); //Make sure we know it's still responsive
@@ -221,13 +227,19 @@ public class ConnectionInterpreter implements Runnable {
 							}
 							continue;
 						}
-						Core.instance.eventManager.callEvent(new MessageEvent(received)); //Tell everybody it's been received
+						if(isIdentified()){ //Allowed to access all other calls now! :)
+							Core.instance.eventManager.callEvent(new MessageEvent(received)); //Tell everybody it's been received
+						}
 					}
 				}
+			} catch (SocketException e) {
+				//No error, it probably just closed
+				close();
+				return;
 			} catch (Exception e) {
 				Core.logger.warning("Error in some received data; ignoring it!");
 				//Error in data received, just continue to next data
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 		open = false;

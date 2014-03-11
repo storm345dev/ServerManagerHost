@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.stormdev.MTA.SM.core.Core;
+
 public class ConnectionManager {
 	private volatile Map<String, Connection> connections = new HashMap<String, Connection>();
 	
@@ -18,6 +20,7 @@ public class ConnectionManager {
 			return false; //Sorry already exists :(
 		}
 		connections.put(connectionId, con);
+		Core.logger.debug("New server connection! "+con.getConnectionID());
 		return true;
 	}
 	

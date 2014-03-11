@@ -25,9 +25,13 @@ public class ConnectionListener {
 		try {
 			Core.logger.info("Binding to port...");
 			ServerSocket socket = new ServerSocket(port);
+			if(!socket.isBound()){
+				Core.logger.error("Socket failed to bind!");
+			}
 			Core.logger.info("Listening to packets!");
 			while(Main.running){
 				Socket clientSocket = socket.accept();
+				clientSocket.setKeepAlive(true);
 				ConnectionInterpreter reader = new ConnectionInterpreter(clientSocket);
 				reader.start();
 			}
