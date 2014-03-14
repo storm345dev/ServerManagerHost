@@ -8,6 +8,7 @@ import net.stormdev.MTA.SM.connections.Message;
 import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.core.Main;
 import net.stormdev.MTA.SM.events.Listener;
+import net.stormdev.MTA.SM.servers.Server;
 
 public class MessageListener implements Listener<MessageEvent> {
 
@@ -22,9 +23,24 @@ public class MessageListener implements Listener<MessageEvent> {
 		Core.logger.debug("Recieved Message: "+message.getMsg());
 		
 		String to = message.getTo();
+		String from = message.getFrom();
+		String title = message.getMsgTitle();
 		if(to.equalsIgnoreCase(MessageRecipient.HOST.getConnectionID())){
 			//TODO Manage messages to us
-			
+			if(title.equals("serverUpdate")){
+				String msg = message.getMsg();
+				Server server = main.connections.getServers().getServer(from);
+				if(server != null){
+					try {
+						server.handleUpdatePacket(msg);
+					} catch (Exception e) {
+						e.printStackTrace();
+						// Invalid packet!
+					}
+				}
+				
+				return;
+			}
 			
 			
 			

@@ -212,6 +212,8 @@ public class ConnectionInterpreter implements Runnable {
 									close();
 									return;
 								}
+								rawMsg("authenticated");
+								continue;
 							}
 							else{
 								rawMsg("unsupportedOperation");

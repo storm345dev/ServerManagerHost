@@ -6,12 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import net.stormdev.MTA.SM.core.Core;
+import net.stormdev.MTA.SM.messaging.MessageRecipient;
+import net.stormdev.MTA.SM.servers.Servers;
 
 public class ConnectionManager {
 	private volatile Map<String, Connection> connections = new HashMap<String, Connection>();
+	private Servers servers;
 	
 	public ConnectionManager(){
-		
+		this.servers = new Servers();
+	}
+	
+	public Servers getServers(){
+		return servers;
 	}
 	
 	public synchronized boolean registerConnection(Connection con){ //true if successful, false if it already exists
@@ -20,13 +27,18 @@ public class ConnectionManager {
 			return false; //Sorry already exists :(
 		}
 		connections.put(connectionId, con);
-		Core.logger.info("Server connected: "+con.getConnectionID());
+		if(con instanceof ServerConnection){
+			servers.registerServer((ServerConnection)con);
+			con.sendMsg(new Message(con.getConnectionID(), MessageRecipient.HOST.getConnectionID(), "requestCommand", "serverUpdate"));
+		}
+		Core.logger.info("Connected: "+con.getConnectionID());
 		return true;
 	}
 	
 	public synchronized void unregisterConnection(String connectionId){
-		Core.logger.info("Server disconnected: "+connectionId);
 		connections.remove(connectionId);
+		servers.disconnectServer(connectionId); //If they were a server, disconnect them!
+		Core.logger.info("Disconnected: "+connectionId);
 	}
 	
 	public synchronized Connection getConnection(String connectionId){
