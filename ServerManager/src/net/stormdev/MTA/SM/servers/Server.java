@@ -2,7 +2,9 @@ package net.stormdev.MTA.SM.servers;
 
 import java.util.regex.Pattern;
 
+import net.stormdev.MTA.SM.connections.Connection;
 import net.stormdev.MTA.SM.connections.ServerConnection;
+import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.messaging.MessageRecipient;
 
 public class Server {
@@ -92,6 +94,35 @@ public class Server {
 	
 	public void kick(){
 		connection.disconnect();
+	}
+	
+	public String getRaw(){
+		return connection.getConnectionID()+"|"+title+"|"+description+"|"+TPS+"|"+playerCount+"|"+maxPlayers+"|"+resourceScore+"|"+open;
+	}
+	
+	public static Server fromRawString(String in) throws NumberFormatException,ArrayIndexOutOfBoundsException,Exception {
+		String[] parts = in.split(Pattern.quote("|"));
+		String conId = parts[0];
+		String title = parts[1];
+		String desc = parts[2];
+		String tpsRaw = parts[3];
+		String playerCountRaw = parts[4];
+		String maxPlayersRaw = parts[5];
+		String rScoreRaw = parts[6];
+		String openRaw = parts[7];
+		
+		double tps = Double.parseDouble(tpsRaw);
+		int playerCount = Integer.parseInt(playerCountRaw);
+		int maxPlayers = Integer.parseInt(maxPlayersRaw);
+		int rScore = Integer.parseInt(rScoreRaw);
+		boolean open = Boolean.parseBoolean(openRaw);
+		Connection con = Core.instance.connections.getConnection(conId);
+		
+		if(con == null || !(con instanceof ServerConnection)){
+			return null;
+		}
+		
+		return create((ServerConnection)con, title, desc, tps, playerCount, maxPlayers, rScore, open);
 	}
 	
 	public synchronized void handleUpdatePacket(String in) throws NumberFormatException,ArrayIndexOutOfBoundsException,Exception {

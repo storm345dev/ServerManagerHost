@@ -225,8 +225,8 @@ public class ConnectionInterpreter implements Runnable {
 							}
 							continue;
 						}
-						if(isIdentified()){ //Allowed to access all other calls now! :)
-							Core.instance.eventManager.callEvent(new MessageEvent(received)); //Tell everybody it's been received
+						if(isIdentified() && connection != null){ //Allowed to access all other calls now! :)
+							Core.instance.eventManager.callEvent(new MessageEvent(connection, received)); //Tell everybody it's been received
 						}
 					}
 				}

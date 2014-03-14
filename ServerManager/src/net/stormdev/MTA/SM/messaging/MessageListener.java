@@ -9,23 +9,24 @@ import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.core.Main;
 import net.stormdev.MTA.SM.events.Listener;
 import net.stormdev.MTA.SM.servers.Server;
+import net.stormdev.MTA.SM.utils.Scheduler;
 
 public class MessageListener implements Listener<MessageEvent> {
 
 	private Main main;
 	public MessageListener(){
 		main = Core.instance;
-		Core.instance.eventManager.registerListener(new MessageEvent(null), this); //Registers the event to us
+		Core.instance.eventManager.registerListener(new MessageEvent(null, null), this); //Registers the event to us
 	}
 	
-	public void onCall(MessageEvent event) {
+	public void onCall(final MessageEvent event) {
 		Message message = event.getMessage();
-		Core.logger.debug("Recieved Message: "+message.getMsg());
-		
 		String to = message.getTo();
-		String from = message.getFrom();
+		final String from = message.getFrom();
 		String title = message.getMsgTitle();
+		
 		if(to.equalsIgnoreCase(MessageRecipient.HOST.getConnectionID())){
+			Core.logger.debug("Recieved Message: "+message.getMsg());
 			//TODO Manage messages to us
 			if(title.equals("serverUpdate")){
 				String msg = message.getMsg();
@@ -38,8 +39,25 @@ public class MessageListener implements Listener<MessageEvent> {
 						// Invalid packet!
 					}
 				}
-				
 				return;
+			}
+			else if(title.equals("getServers")){
+				final List<Server> servers = main.connections.getServers().getConnectedServers();
+				Scheduler.instance.runTaskAsync(new Runnable(){
+
+					public void run() { //Don't want it pausing the receiving thread (Where the events are called from)
+						StringBuilder toSend = new StringBuilder();
+						for(Server s:servers){
+							if(toSend.length() < 1){
+								toSend.append(s.getRaw());
+								continue;
+							}
+							toSend.append(","+s.getRaw());
+						}
+						Message msg = new Message(from, MessageRecipient.HOST.getConnectionID(), "servers", toSend.toString());
+						event.getSender().sendMsg(msg); //Reply
+						return;
+					}});
 			}
 			
 			

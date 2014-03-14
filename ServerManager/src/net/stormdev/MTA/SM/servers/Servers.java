@@ -34,7 +34,7 @@ public class Servers {
 		servers.remove(conId);
 	}
 	
-	public List<Server> getConnectedServers(){
+	public synchronized List<Server> getConnectedServers(){
 		return new ArrayList<Server>(servers.values());
 	}
 
