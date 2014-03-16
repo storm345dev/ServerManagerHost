@@ -43,26 +43,28 @@ public class ConnectionListener {
 			}
 			Core.logger.info("Listening to packets!");
 			while(Main.running){
-				Socket clientSocket;
 				try {
-					clientSocket = socket.accept();
+					Socket clientSocket;
+					try {
+						clientSocket = socket.accept();
+					} catch (Exception e) {
+						return; //Program has ended
+					}
+					clientSocket.setKeepAlive(true);
+					ConnectionInterpreter reader = new ConnectionInterpreter(clientSocket);
+					reader.start();
 				} catch (Exception e) {
-					return; //Program has ended
+					//Whatever
 				}
-				clientSocket.setKeepAlive(true);
-				ConnectionInterpreter reader = new ConnectionInterpreter(clientSocket);
-				reader.start();
 			}
 			socket.close();
 			if(!Main.running){
 				return;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			if(Main.running){
-				open();
-				return;
-			}
+			Core.logger.error("Critical error! Is port "+port+" already in use?");
+			Core.instance.shutdown();
+			return;
 		}
 		return;
 	}
