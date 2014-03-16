@@ -15,10 +15,21 @@ public class EventManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public synchronized <T extends Event> void registerListener(T event, Listener<T> listener){
+	public synchronized <T extends Event> void registerListener(Class<T> event, Listener<T> listener){
 		List<Listener<?>> handles = new ArrayList<Listener<?>>();
 		if(handlers.containsKey(event)){
 			handles = handlers.get(event);
+		}
+		Core.logger.debug("Registered listener "+listener.toString());
+		handles.add(listener);
+		handlers.put((Class<Event>) event, handles);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public synchronized <T extends Event> void registerListener(T event, Listener<T> listener){
+		List<Listener<?>> handles = new ArrayList<Listener<?>>();
+		if(handlers.containsKey(event.getClass())){
+			handles = handlers.get(event.getClass());
 		}
 		Core.logger.debug("Registered listener "+listener.toString());
 		handles.add(listener);

@@ -21,6 +21,12 @@ public class ConnectionManager {
 		return servers;
 	}
 	
+	public synchronized void closeAll(){
+		for(Connection con:connections.values()){
+			con.disconnect();
+		}
+	}
+	
 	public synchronized boolean registerConnection(Connection con){ //true if successful, false if it already exists
 		String connectionId = con.getConnectionID();
 		if(connections.containsKey(connectionId)){

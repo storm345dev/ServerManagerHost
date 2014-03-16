@@ -1,7 +1,12 @@
 package net.stormdev.MTA.SM.core;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import net.stormdev.MTA.SM.connections.ConnectionListener;
 import net.stormdev.MTA.SM.connections.ConnectionManager;
+import net.stormdev.MTA.SM.events.CommandInputEvent;
 import net.stormdev.MTA.SM.events.EventManager;
 import net.stormdev.MTA.SM.messaging.Encrypter;
 import net.stormdev.MTA.SM.messaging.MessageListener;
@@ -12,8 +17,8 @@ public class Main {
 	private int port = 50000; //50k
 	private String passPhrase;
 	
-	public static boolean running = true;
-	private boolean ending = false;
+	public static volatile boolean running = false;
+	public volatile boolean ending = false;
 	
 	public ConnectionListener connectionListener;
 	public ConnectionManager connections;
@@ -24,6 +29,7 @@ public class Main {
 	
 	public Main(String[] args){
 		this.args = args;
+		running = true;
 	}
 	
 	public void begin(){
@@ -39,32 +45,32 @@ public class Main {
 				if(!ending){
 					end();
 				}
-				System.exit(0);
 				return;
 			}
 		});
 		
 		start();
+		return;
 	}
 	
 	public void start(){
 		//Start everything
-				while(running){
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						if(!ending){
-							end();
-						}
-						return; //Stop program
-					}
-					onTick();
+		while(running){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				if(!ending){
+					end();
 				}
+				return; //Stop program
+			}
+			onTick();
+		}
+		return;
 	}
 	
 	public boolean onLoad(String[] args){
 		Core.logger.info("Loading...");
-		//TODO Servermanager
 		if(args.length < 2){
 			Core.logger.error("Sorry, not enough args, please launch the program with the port you wish to use and the security passphrase!");
 			return false;
@@ -83,6 +89,8 @@ public class Main {
 			return false;
 		}
 		
+		Core.logger.info("Using options: Port: "+port+" PassPhrase: "+passPhrase);
+		
 		new Scheduler(); //Initialize it
 		
 		eventManager = new EventManager();
@@ -93,7 +101,48 @@ public class Main {
 		
 		Core.logger.info("Running!");
 		
+		Scheduler.instance.runTaskAsync(new Runnable(){
+
+			public void run() {
+				new InputListener();
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				while(running){
+					try {
+						String line;
+						while(running && (line = br.readLine()) != null){
+							try {
+								CommandInputEvent event = new CommandInputEvent(line);
+								eventManager.callEvent(event);
+								if(line.equalsIgnoreCase("stop") || line.equalsIgnoreCase("end")){
+									return;
+								}
+							} catch (Exception e) {
+								// Proceed with reading
+								e.printStackTrace();
+							}
+						}
+					} catch (IOException e) {
+						continue; //error
+					}
+				}
+				try {
+					br.close();
+				} catch (IOException e) {
+					return;
+				}
+				return;
+			}});
+		
 		return true;
+	}
+	
+	public void shutdown(){
+		running = false;
+		if(!ending){
+			end();
+		}
+		ending = true;
+		return;
 	}
 	
 	public void end(){
@@ -102,7 +151,9 @@ public class Main {
 		}
 		
 		Scheduler.instance.shutdown();
-		ending = false;
+		connections.closeAll();
+		connectionListener.close();
+		ending = true;
 		running = false;
 	}
 	

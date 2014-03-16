@@ -72,6 +72,9 @@ public class ConnectionInterpreter implements Runnable {
 			if(inFromClient != null){
 				inFromClient.close();
 			}
+			if(inFromClient != null){
+				inFromClient.close();
+			}
 			if(isIdentified()){
 				Core.instance.connections.unregisterConnection(id);
 			}
@@ -82,6 +85,7 @@ public class ConnectionInterpreter implements Runnable {
 		finally {
 			open = false;
 		}
+		Core.logger.info(getConnectionId()+": Socket closed!");
 	}
 	
 	public void start(){
@@ -94,7 +98,7 @@ public class ConnectionInterpreter implements Runnable {
 			@SuppressWarnings("unused")
 			public void run() {
 				int i = 0;
-				while(open && socket.isConnected() && !socket.isClosed() && Main.running){
+				while(Main.running && open && socket.isConnected() && !socket.isClosed()){
 					
 					if(i < 1){ //1 time in a 40 cycle, so roughly every 5s
 					sendKeepAliveMessage();

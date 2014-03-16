@@ -37,6 +37,10 @@ public class Scheduler {
 		}
 	}
 	
+	public List<Runnable> shutdownNow(){
+		return executor.shutdownNow();
+	}
+	
 	public void runTaskAsync(Runnable run){
 		executor.submit(run);
 	}
