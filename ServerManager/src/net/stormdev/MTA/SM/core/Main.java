@@ -84,10 +84,10 @@ public class Main {
 			return false;
 		}
 		try {
-			passPhrase = new String(args[1].getBytes(), "UTF-16");
+			passPhrase = new String(args[1].getBytes(), "UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			// Uh oh
-			Core.logger.error("Pass phrase MUST be in UTF-16!");
+			Core.logger.error("Pass phrase MUST be in UTF-8!");
 			return false;
 		}
 		passPhrase = passPhrase.trim();
