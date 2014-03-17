@@ -35,8 +35,9 @@ public class MessageListener implements Listener<MessageEvent> {
 					try {
 						server.handleUpdatePacket(msg);
 					} catch (Exception e) {
-						e.printStackTrace();
 						// Invalid packet!
+						Core.logger.error("Invalid server update message format! Disconnecting them!");
+						event.getSender().disconnect();
 					}
 				}
 				return;
