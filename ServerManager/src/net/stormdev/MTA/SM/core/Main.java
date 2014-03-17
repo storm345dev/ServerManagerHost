@@ -3,6 +3,7 @@ package net.stormdev.MTA.SM.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import net.stormdev.MTA.SM.connections.ConnectionListener;
 import net.stormdev.MTA.SM.connections.ConnectionManager;
@@ -14,7 +15,7 @@ import net.stormdev.MTA.SM.utils.Scheduler;
 
 public class Main {
 	
-	private int port = 50000; //50k
+	private int port = 0; //50k
 	private String passPhrase;
 	
 	public static volatile boolean running = false;
@@ -82,14 +83,21 @@ public class Main {
 			Core.logger.error("Sorry, you must launch the program with the port you wish to use!");
 			return false;
 		}
-		passPhrase = args[1];
+		try {
+			passPhrase = new String(args[1].getBytes(), "UTF-16");
+		} catch (UnsupportedEncodingException e1) {
+			// Uh oh
+			Core.logger.error("Pass phrase MUST be in UTF-16!");
+			return false;
+		}
+		passPhrase = passPhrase.trim();
 		encrypter = new Encrypter(passPhrase);
 		if(!encrypter.test()){
 			Core.logger.error("Invalid security key!");
 			return false;
 		}
 		
-		Core.logger.info("Using options: Port: "+port+" PassPhrase: "+passPhrase);
+		Core.logger.info("Using options: Port: '"+port+"' PassPhrase: '"+passPhrase+"'");
 		
 		new Scheduler(); //Initialize it
 		
