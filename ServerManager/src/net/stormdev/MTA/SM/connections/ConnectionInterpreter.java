@@ -85,7 +85,6 @@ public class ConnectionInterpreter implements Runnable {
 		finally {
 			open = false;
 		}
-		Core.logger.info(getConnectionId()+": Socket closed!");
 	}
 	
 	public void start(){
