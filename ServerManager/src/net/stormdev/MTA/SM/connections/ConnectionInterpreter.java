@@ -240,7 +240,7 @@ public class ConnectionInterpreter implements Runnable {
 			} catch (Exception e) {
 				Core.logger.warning("Error in some received data; ignoring it!");
 				//Error in data received, just continue to next data
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		open = false;
