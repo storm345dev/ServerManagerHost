@@ -21,6 +21,7 @@ public class ConnectionInterpreter implements Runnable {
 
 	private static final String serverIdentify = "server";
 	private static final String clientIdentify = "client";
+	private static final String webIdentify = "web";
 	private static final boolean useSendQueue = false;
 	
 	private volatile Socket socket;
@@ -201,12 +202,28 @@ public class ConnectionInterpreter implements Runnable {
 								return;
 							}
 							boolean server = msg.equals(serverIdentify); //Else it must equal clientIdentify to have got execution thus far
+							boolean web = server ? false:msg.equals(webIdentify);
 							id = received.getFrom(); //That is now what they're known to us as
 							indentified = true;
 							
 							if(server){
 								//Create a new Server Connection
 								connection = new ServerConnection(this, id);
+								boolean exists = !Core.instance.connections.registerConnection(connection);
+								if(exists){
+									indentified = false;
+									rawMsg("alreadyConnected");
+									rawMsg("close");
+									close();
+									return;
+								}
+								rawMsg("authenticated");
+								continue;
+							}
+							else if(web){
+								//TODO Create a new web connection
+								connection = new WebConnection(this, id);
+								
 								boolean exists = !Core.instance.connections.registerConnection(connection);
 								if(exists){
 									indentified = false;
