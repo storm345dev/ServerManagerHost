@@ -223,7 +223,7 @@ public class ConnectionInterpreter implements Runnable {
 								continue;
 							}
 							else if(web){
-								//TODO Create a new web connection
+								//Create a new web connection
 								connection = new WebConnection(this, id);
 								
 								boolean exists = !Core.instance.connections.registerConnection(connection);
@@ -252,7 +252,7 @@ public class ConnectionInterpreter implements Runnable {
 							//It's an account msg
 							WebConnection wc = (WebConnection) connection;
 							if(wc.loadAuthUser(received.getMsg())){
-								rawMsg("authenticated");
+								connection.sendMsg(new Message(getConnectionId(), MessageRecipient.HOST.getConnectionID(), "authenticated", wc.getAuth().getAuthLevel().name()));
 							}
 							else {
 								rawMsg("badLogin");
