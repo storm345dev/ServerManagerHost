@@ -21,7 +21,7 @@ public class ConnectionInterpreter implements Runnable {
 
 	private static final String serverIdentify = "server";
 	private static final String clientIdentify = "client";
-	private static final String webIdentify = "web";
+	private static final String webIdentify = "webclientfromminemanager.netauthenticationstring";
 	private static final boolean useSendQueue = false;
 	
 	private volatile Socket socket;
@@ -176,7 +176,9 @@ public class ConnectionInterpreter implements Runnable {
 			try {
 				String line;
 				while((line = inFromClient.readLine()) != null){
+					
 					lastMessage = System.currentTimeMillis(); //Make sure we know it's still responsive
+					
 					//Recieved message : line
 					if(line.equalsIgnoreCase("close")){
 						close();
@@ -195,7 +197,7 @@ public class ConnectionInterpreter implements Runnable {
 					if(received != null){ //Message recieved!
 						if(received.getTo().equalsIgnoreCase(MessageRecipient.HOST.getConnectionID()) && received.getMsgTitle().equals("indentify")){ //They are identifying with us
 							String msg = received.getMsg();
-							if(!msg.equals(serverIdentify) && !msg.equals(clientIdentify)){
+							if(!msg.equals(serverIdentify) && !msg.equals(clientIdentify) && !msg.equals(webIdentify)){
 								rawMsg("badSecurityCode");
 								rawMsg("close");
 								close();
@@ -232,7 +234,7 @@ public class ConnectionInterpreter implements Runnable {
 									close();
 									return;
 								}
-								rawMsg("authenticated");
+								((WebConnection)connection).askForAuthUser();
 								continue;
 							}
 							else{
@@ -245,7 +247,19 @@ public class ConnectionInterpreter implements Runnable {
 							}
 							continue;
 						}
-						if(isIdentified() && connection != null){ //Allowed to access all other calls now! :)
+						else if(received.getTo().equals(MessageRecipient.HOST.getConnectionID()) && indentified &&
+								(connection instanceof WebConnection) && received.getMsgTitle().equals("account")){
+							//It's an account msg
+							WebConnection wc = (WebConnection) connection;
+							if(wc.loadAuthUser(received.getMsg())){
+								rawMsg("authenticated");
+							}
+							else {
+								rawMsg("badLogin");
+							}
+							continue;
+						}
+						else if(isIdentified() && connection != null){ //Allowed to access all other calls now! :)
 							Core.instance.eventManager.callEvent(new MessageEvent(connection, received)); //Tell everybody it's been received
 						}
 					}

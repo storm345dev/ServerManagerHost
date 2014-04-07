@@ -5,7 +5,7 @@ import net.stormdev.MTA.SM.utils.Scheduler;
 public class Core {
 	public static Main instance = null;
 	public static Logger logger = null;
-	public final static boolean debug = false;
+	public final static boolean debug = true;
 	
 	public static void main(String[] args){
 		logger = new SimpleLogger(debug);
