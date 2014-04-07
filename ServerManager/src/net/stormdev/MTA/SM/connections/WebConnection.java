@@ -2,6 +2,9 @@ package net.stormdev.MTA.SM.connections;
 
 import java.util.List;
 
+import net.stormdev.MTA.SM.core.AuthAccount;
+import net.stormdev.MTA.SM.core.AuthType;
+import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.messaging.MessageRecipient;
 import net.stormdev.MTA.SM.utils.GoogleUser;
 
@@ -10,6 +13,7 @@ public class WebConnection implements Connection {
 	private String conId;
 	private ConnectionInterpreter connection;
 	private GoogleUser user;
+	private AuthAccount auth;
 	
 	public WebConnection(ConnectionInterpreter interpreter, String webId){
 		this.conId = webId;
@@ -30,9 +34,14 @@ public class WebConnection implements Connection {
 	
 	protected boolean loadAuthUser(String in){
 		user = GoogleUser.fromString(in);
-		
-		boolean valid = (user != null) && user.authenticate(); //TODO Also check if they can access this network
+		boolean valid = (user != null) && user.authenticate();
+		auth = !valid ? null:Core.instance.accAuths.get(AuthType.GOOGLE, user.getEmail());
+		valid = !valid ? false:auth!=null; //If auth==null, set valid to false
 		return valid;
+	}
+	
+	public AuthAccount getAuth(){
+		return auth;
 	}
 
 	public String getConnectionID() {

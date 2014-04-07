@@ -1,0 +1,9 @@
+GOOGLE:storm345dev@gmail.com:OWNER
+GOOGLE:mtabuilder@gmail.com:DEVELOPER
+GOOGLE:friend@gmail.com:OPERATOR
+GOOGLE:admin@gmail.com:ADMIN
+GOOGLE:helper@gmail.com:USER
+MINECRAFT:563b78a0a7fb4c3b8d2aeba7a2c169f1:OWNER
+MINECRAFT:dc5c98cc1ae242fcb4b4de9e01021f0c:OWNER
+MINECRAFT:someMojangId:ADMIN
+MINECRAFT:someOtherMojangId:USER

@@ -25,6 +25,7 @@ public class Main {
 	public ConnectionManager connections;
 	public EventManager eventManager;
 	public Encrypter encrypter;
+	public AccountAuthentication accAuths;
 	
 	private String[] args;
 	
@@ -140,7 +141,7 @@ public class Main {
 				}
 				return;
 			}});
-		
+		this.accAuths = new AccountAuthentication();
 		return true;
 	}
 	
