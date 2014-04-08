@@ -69,6 +69,26 @@ public class ConnectionManager {
 		return cons;
 	}
 	
+	public synchronized List<Connection> getWebConnections(){
+		List<Connection> cons = new ArrayList<Connection>();
+		for(Connection c:connections.values()){
+			if(c instanceof WebConnection){
+				cons.add(c);
+			}
+		}
+		return cons;
+	}
+	
+	public List<Connection> getWebConnectionsNonBlock(){
+		List<Connection> cons = new ArrayList<Connection>();
+		for(Connection c:new ArrayList<Connection>(connections.values())){
+			if(c instanceof WebConnection){
+				cons.add(c);
+			}
+		}
+		return cons;
+	}
+	
 	public synchronized List<Connection> getConnections(){
 		return new ArrayList<Connection>(connections.values());
 	}

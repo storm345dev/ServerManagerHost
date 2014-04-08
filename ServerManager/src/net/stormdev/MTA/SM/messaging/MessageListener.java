@@ -60,13 +60,43 @@ public class MessageListener implements Listener<MessageEvent> {
 						return;
 					}});
 			}
-			
+			else if(title.equals("getServer")){
+				final Server server = main.connections.getServers().getServer(message.getMsg());
+				Scheduler.instance.runTaskAsync(new Runnable(){
+
+					public void run() { //Don't want it pausing the receiving thread (Where the events are called from)
+						if(server == null){
+							Message msg = new Message(from, MessageRecipient.HOST.getConnectionID(), "serverInfo", "invalid");
+							event.getSender().sendMsg(msg); //Reply
+							return;
+						}
+						String send = server.getRaw();
+						Message msg = new Message(from, MessageRecipient.HOST.getConnectionID(), "serverInfo", send);
+						event.getSender().sendMsg(msg); //Reply
+						return;
+					}});
+			}
 			
 			
 			return;
 		}
 		
 		//It's not for us... so forward it on
+		if(to.equalsIgnoreCase("web")){ //Send to all correct web client
+			final Message msg = message;
+			Scheduler.instance.runTaskAsync(new Runnable(){
+
+				public void run() {
+					//Send it
+					List<Connection> webs = Core.instance.connections.getWebConnectionsNonBlock();
+					for(Connection c:webs){
+						c.sendMsg(msg);
+					}
+					return;
+				}});
+			return;
+		}
+		
 		List<Connection> sendTo = new ArrayList<Connection>();
 		if(to.equalsIgnoreCase(MessageRecipient.ALL.getConnectionID())){
 			//Send it to everybody
