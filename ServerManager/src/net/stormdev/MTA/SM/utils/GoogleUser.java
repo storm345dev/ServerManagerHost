@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import net.stormdev.MTA.SM.http.SimplePostClient;
 
 public class GoogleUser {
-	private static final String authURL = "http://localhost:8080/MineManager/auth"; //TODO To be changed when launched...
+	private static final String authURL = "http://minemanager.org/auth"; //TODO To be changed when launched...
 	
 	private String email;
 	private String name;
