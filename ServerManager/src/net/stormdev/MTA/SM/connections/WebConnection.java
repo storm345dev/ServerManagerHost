@@ -34,9 +34,18 @@ public class WebConnection implements Connection {
 	
 	protected boolean loadAuthUser(String in){
 		user = GoogleUser.fromString(in);
+		if(user == null){
+			System.out.println("Refused: User null!");
+		}
 		boolean valid = (user != null) && user.authenticate();
+		if(!valid){
+			System.out.println("Refused: Bad MM login!");
+		}
 		auth = !valid ? null:Core.instance.accAuths.get(AuthType.GOOGLE, user.getEmail());
 		valid = !valid ? false:auth!=null; //If auth==null, set valid to false
+		if(!valid){
+			System.out.println("Refused: No perms!");
+		}
 		return valid;
 	}
 	

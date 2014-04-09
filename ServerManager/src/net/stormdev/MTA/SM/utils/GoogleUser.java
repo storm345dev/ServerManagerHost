@@ -78,6 +78,7 @@ public class GoogleUser {
 	public static GoogleUser fromString(String in){
 		String[] parts = in.split(Pattern.quote("|"));
 		if(parts.length < 7){
+			System.out.println("RECEIVED INVALID GOOGLE USER! Rec:"+in);
 			return null;
 		}
 		String name = parts[0];
