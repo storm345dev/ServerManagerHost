@@ -25,16 +25,14 @@ public class GoogleUser {
 	private String name;
 	private String id;
 	private String dispName;
-	private String profilePicURL;
 	private String locale;
 	private String uuid;
 	
-	private GoogleUser(String email, String name, String id, String dispName, String profilePicURL, String locale, String uuid){
+	private GoogleUser(String email, String name, String id, String dispName, String locale, String uuid){
 		this.email = email;
 	    this.name = name;
 	    this.id = id;
 	    this.dispName = dispName;
-	    this.profilePicURL = profilePicURL;
 	    this.locale = locale;
 	    this.uuid = uuid;
 	}
@@ -55,16 +53,12 @@ public class GoogleUser {
 		return dispName;
 	}
 	
-	public String getProfilePicURL(){
-		return profilePicURL;
-	}
-	
 	public String getLocale(){
 		return locale;
 	}
 	
 	public String asString(){
-		return name+"|"+email+"|"+id+"|"+dispName+"|"+profilePicURL+"|"+locale+"|"+uuid+"|";
+		return name+"|"+email+"|"+id+"|"+dispName+"|"+uuid+"|"+locale+"|";
 	}
 	
 	public boolean authenticate(){
@@ -77,7 +71,7 @@ public class GoogleUser {
 	
 	public static GoogleUser fromString(String in){
 		String[] parts = in.split(Pattern.quote("|"));
-		if(parts.length < 7){
+		if(parts.length < 6){
 			System.out.println("RECEIVED INVALID GOOGLE USER! Rec:"+in);
 			return null;
 		}
@@ -85,10 +79,10 @@ public class GoogleUser {
 		String email = parts[1];
 		String id = parts[2];
 		String dispName = parts[3];
-		String profilePicURL = parts[4];
+		String uuid = parts[4];
 		String locale = parts[5];
-		String uuid = parts[6];
-		GoogleUser user = new GoogleUser(email, name, id, dispName, profilePicURL, locale, uuid);
+		
+		GoogleUser user = new GoogleUser(email, name, id, dispName, locale, uuid);
 		return user;
 	}
 }
