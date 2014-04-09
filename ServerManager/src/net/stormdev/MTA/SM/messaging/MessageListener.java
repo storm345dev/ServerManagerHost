@@ -5,6 +5,8 @@ import java.util.List;
 
 import net.stormdev.MTA.SM.connections.Connection;
 import net.stormdev.MTA.SM.connections.Message;
+import net.stormdev.MTA.SM.connections.WebConnection;
+import net.stormdev.MTA.SM.core.AuthLevel;
 import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.core.Main;
 import net.stormdev.MTA.SM.events.Listener;
@@ -107,6 +109,17 @@ public class MessageListener implements Listener<MessageEvent> {
 			if(con == null){
 				//Invalid
 				return;
+			}if(title.equals("executeCommand")){
+				if(event.getSender() instanceof WebConnection){
+					WebConnection wc = (WebConnection) event.getSender();
+					try {
+						if(!wc.getAuth().getAuthLevel().canUse(AuthLevel.OPERATOR)){
+							return;
+						}
+					} catch (Exception e) {
+						return; //Not authed yet
+					}
+				}
 			}
 			sendTo.add(con); //Just send it to who it asked for
 		}
