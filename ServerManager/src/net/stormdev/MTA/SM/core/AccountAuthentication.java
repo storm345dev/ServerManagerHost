@@ -61,7 +61,8 @@ public class AccountAuthentication {
 	
 	private void setDefaults(){
 		accounts.clear();
-		accounts.add(new AuthAccount("storm345dev@gmail.com", AuthType.GOOGLE, AuthLevel.OWNER));
+		accounts.add(new AuthAccount("itsjustbjarn@gmail.com", AuthType.GOOGLE, AuthLevel.OWNER));
+		accounts.add(new AuthAccount("storm345dev@gmail.com", AuthType.GOOGLE, AuthLevel.DEVELOPER));
 		accounts.add(new AuthAccount("mtabuilder@gmail.com", AuthType.GOOGLE, AuthLevel.DEVELOPER));
 		accounts.add(new AuthAccount("friend@gmail.com", AuthType.GOOGLE, AuthLevel.OPERATOR));
 		accounts.add(new AuthAccount("admin@gmail.com", AuthType.GOOGLE, AuthLevel.ADMIN));

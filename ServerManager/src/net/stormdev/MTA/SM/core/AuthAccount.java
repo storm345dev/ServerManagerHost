@@ -27,6 +27,7 @@ public class AuthAccount {
 		if(type == null || level == null){
 			throw new Exception("Invalid!");
 		}
+		Core.logger.info("Found account: Type:"+this.type.name()+" Name:"+this.name+" Level:"+this.level.name());
 	}
 	
 	public String getName(){
