@@ -9,7 +9,6 @@ public class GoogleUser {
 	private static final DeployType deploy = DeployType.ONLINE;
 	private static final String authURL; //TODO To be changed when launched...
 	static {
-		System.out.println("Using connection: "+deploy.name());
 		switch(deploy){
 		case LOCAL: authURL = "http://localhost:8080/MineManager/auth";
 			break;
