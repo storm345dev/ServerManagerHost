@@ -2,7 +2,7 @@ package net.stormdev.MTA.SM.utils;
 
 import java.util.regex.Pattern;
 
-import net.stormdev.MTA.SM.http.SimpleClient;
+import net.stormdev.MTA.SM.http.SimpleHttpClient;
 
 public class GoogleUser {
 	
@@ -69,7 +69,7 @@ public class GoogleUser {
 	}
 	
 	public boolean authenticate(){
-		String response = SimpleClient.get(authURL, new String[]{"accEmail", "accUUID"}, new String[]{email, uuid});
+		String response = SimpleHttpClient.post(authURL, new String[]{"accEmail", "accUUID"}, new String[]{email, uuid});
 		if(response == null || response.equalsIgnoreCase("false")){
 			return false;
 		}

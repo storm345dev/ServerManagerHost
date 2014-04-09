@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-public class SimpleClient {
+public class SimpleHttpClient {
 	public static String post(String site, String[] keys, String[] values){
 		String data = "";
 		if(keys.length > values.length){
