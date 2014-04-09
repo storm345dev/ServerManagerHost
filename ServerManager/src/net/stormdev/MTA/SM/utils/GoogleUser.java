@@ -2,10 +2,25 @@ package net.stormdev.MTA.SM.utils;
 
 import java.util.regex.Pattern;
 
-import net.stormdev.MTA.SM.http.SimplePostClient;
+import net.stormdev.MTA.SM.http.SimpleClient;
 
 public class GoogleUser {
-	private static final String authURL = "http://minemanager.org/auth"; //TODO To be changed when launched...
+	
+	private static final DeployType deploy = DeployType.ONLINE;
+	private static final String authURL; //TODO To be changed when launched...
+	static {
+		System.out.println("Using connection: "+deploy.name());
+		switch(deploy){
+		case LOCAL: authURL = "http://localhost:8080/MineManager/auth";
+			break;
+		case LOCAL_ROOT: authURL = "localhost:8080/auth";
+			break;
+		case ONLINE: authURL = "http://minemanager.org/auth";
+			break;
+		default: authURL = "http://minemanager.org/auth";
+			break;
+		}
+	}
 	
 	private String email;
 	private String name;
@@ -54,7 +69,7 @@ public class GoogleUser {
 	}
 	
 	public boolean authenticate(){
-		String response = SimplePostClient.post(authURL, new String[]{"accEmail", "accUUID"}, new String[]{email, uuid});
+		String response = SimpleClient.get(authURL, new String[]{"accEmail", "accUUID"}, new String[]{email, uuid});
 		if(response == null || response.equalsIgnoreCase("false")){
 			return false;
 		}
