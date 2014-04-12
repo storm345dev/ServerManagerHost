@@ -65,7 +65,7 @@ public void loadFromInputStream(InputStream input) {
 	}
 	
 }
-public void save() {
+public synchronized void save() {
 	
 	try {
 		FileWriter stream = new FileWriter(this.StorageFile);

@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import net.stormdev.MTA.SM.connections.Message;
 import net.stormdev.MTA.SM.connections.TransitMessage;
+import net.stormdev.MTA.SM.test.TestOperation;
+import net.stormdev.MTA.SM.test.TestResult;
 
 public class Encrypter {
 	
@@ -20,7 +22,7 @@ public class Encrypter {
 		if(decrypt){
 			msg = fromChanged(msg);
 		}
-		msg = msg.replaceAll("`", "");
+		//msg = msg.replaceAll("`", "");
 		
 		List<Integer> chs = new ArrayList<Integer>();
 		char[] chars = msg.toCharArray();
@@ -33,7 +35,6 @@ public class Encrypter {
 			int ref = Character.codePointAt(chars,i); //The unicode char number
 			int pRef = Character.codePointAt(pass, z);
 			int xor = ref ^ pRef; //XOR them together
-			
 			chs.add(xor);
 			
 			z++;
@@ -53,6 +54,26 @@ public class Encrypter {
 		}
 		
 		return "`"+mb.toString();
+	}
+	
+	public String fromChangedOnDecrypt(String changed){ //Only translates, doesn't decrypt
+		changed = changed.replaceAll("`", "");
+		String[] parts = changed.split(",");
+		
+		StringBuilder product = new StringBuilder();
+		for(String segment:parts){
+			int i;
+			try {
+				i = Integer.parseInt(segment);
+			} catch (NumberFormatException e) {
+				continue; //Invalid segment
+			}
+			
+			char[] ch = Character.toChars(i);
+			product.append(ch);
+		}
+		
+		return product.toString();
 	}
 	
 	public String fromChanged(String changed){ //Only translates, doesn't decrypt
@@ -81,5 +102,13 @@ public class Encrypter {
 				change(
 						change(rand)  )  );
 		return rand.equals(test) && Message.test() && TransitMessage.test();
+	}
+	
+	public TestResult test(String rand){
+		String test = fromChangedOnDecrypt(
+				change(
+						change(rand)  )  );
+		boolean pass = rand.equals(test);
+		return new TestResult(TestOperation.ENCRYPTER, pass, rand, test);
 	}
 }
