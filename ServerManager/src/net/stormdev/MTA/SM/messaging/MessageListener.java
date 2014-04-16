@@ -83,6 +83,7 @@ public class MessageListener implements Listener<MessageEvent> {
 				if(c instanceof WebConnection){
 					WebConnection wc = (WebConnection) c;
 					wc.setCurrentServerConsole(message.getMsg());
+					wc.sendMsg(new Message(c.getConnectionID(), message.getMsg(), "consoleOutput", "[0;32;1mRemote connection successfully established![0;37;1m"));
 				}
 			}
 			else if(title.equals("consoleOutput")){
