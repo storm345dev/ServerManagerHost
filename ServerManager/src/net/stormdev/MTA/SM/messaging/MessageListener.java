@@ -132,23 +132,48 @@ public class MessageListener implements Listener<MessageEvent> {
 			sendTo.addAll(main.connections.getServerConnections());
 		}
 		else {
-			Connection con = main.connections.getConnection(to);
-			if(con == null){
+			Connection conTo = main.connections.getConnection(to);
+			if(conTo == null){
 				//Invalid
 				return;
-			}if(title.equals("executeCommand")){
-				if(event.getSender() instanceof WebConnection){
-					WebConnection wc = (WebConnection) event.getSender();
-					try {
-						if(!wc.getAuth().getAuthLevel().canUse(AuthLevel.OPERATOR)){
-							return;
-						}
-					} catch (Exception e) {
-						return; //Not authed yet
-					}
+			}
+			Connection con = event.getSender();
+			if(title.equals("executeCommand")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
 				}
 			}
-			sendTo.add(con); //Just send it to who it asked for
+			else if(title.equals("restart")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR, true)){
+					return;
+				}
+			}
+			else if(title.equals("reload")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR, true)){
+					return;
+				}
+			}
+			else if(title.equals("alert")){
+				if(!checkConPerm(con, AuthLevel.ADMIN, true)){
+					return;
+				}
+			}
+			else if(title.equals("printMsg")){
+				if(!checkConPerm(con, AuthLevel.ADMIN, true)){
+					return;
+				}
+			}
+			else if(title.equals("setTime")){
+				if(!checkConPerm(con, AuthLevel.ADMIN, true)){
+					return;
+				}
+			}
+			else if(title.equals("stop")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
+			sendTo.add(conTo); //Just send it to who it asked for
 		}
 		
 		for(Connection c:sendTo){
@@ -158,4 +183,34 @@ public class MessageListener implements Listener<MessageEvent> {
 		return;
 	}
 	
+	private boolean checkConPerm(Connection c, AuthLevel check){
+		if(c instanceof WebConnection){
+			WebConnection wc = (WebConnection) c;
+			try {
+				if(!wc.getAuth().getAuthLevel().canUse(AuthLevel.OPERATOR)){
+					return false;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false; //Not authed yet
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkConPerm(Connection c, AuthLevel check, boolean allowNonWeb){
+		if(c instanceof WebConnection){
+			WebConnection wc = (WebConnection) c;
+			try {
+				if(!wc.getAuth().getAuthLevel().canUse(AuthLevel.OPERATOR)){
+					return false;
+				}
+			} catch (Exception e) {
+				return false; //Not authed yet
+			}
+			return true;
+		}
+		return allowNonWeb;
+	}
 }
