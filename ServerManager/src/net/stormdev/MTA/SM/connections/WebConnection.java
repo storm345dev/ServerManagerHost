@@ -14,11 +14,27 @@ public class WebConnection implements Connection {
 	private ConnectionInterpreter connection;
 	private GoogleUser user;
 	private AuthAccount auth;
+	private String serverConsole = "none";
 	
 	public WebConnection(ConnectionInterpreter interpreter, String webId){
 		this.conId = webId;
 		this.connection = interpreter;
 	}
+	
+	public void setCurrentServerConsole(String console){
+		this.serverConsole = console;
+	}
+	
+	public boolean isViewingConsole(String serverID){ 
+		if(serverConsole.equals("all")){
+			return true;
+		}
+		else if(serverConsole.equals("none")){
+			return false;
+		}
+		return serverConsole.equals(serverID);
+	}
+	
 	
 	public GoogleUser getUser(){
 		return user;

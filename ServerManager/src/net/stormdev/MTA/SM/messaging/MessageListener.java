@@ -78,6 +78,32 @@ public class MessageListener implements Listener<MessageEvent> {
 						return;
 					}});
 			}
+			else if(title.equals("setConsole")){
+				Connection c = event.getSender();
+				if(c instanceof WebConnection){
+					WebConnection wc = (WebConnection) c;
+					wc.setCurrentServerConsole(message.getMsg());
+				}
+			}
+			else if(title.equals("consoleOutput")){
+				final Message msg = message;
+				Scheduler.instance.runTaskAsync(new Runnable(){
+
+					public void run() {
+						//Send it
+						List<Connection> webs = Core.instance.connections.getWebConnectionsNonBlock();
+						for(Connection c:webs){
+							if(c instanceof WebConnection){
+								WebConnection wc = (WebConnection) c;
+								if(!wc.isViewingConsole(from)){
+									continue; //Don't send it...
+								}
+								wc.sendMsg(msg);
+							}
+						}
+						return;
+					}});
+			}
 			
 			
 			return;
