@@ -1,5 +1,5 @@
 GOOGLE:storm345dev@gmail.com:OWNER
-GOOGLE:mtabuilder@gmail.com:DEVELOPER
+GOOGLE:mtabuilder@gmail.com:ADMIN
 GOOGLE:friend@gmail.com:OPERATOR
 GOOGLE:admin@gmail.com:ADMIN
 GOOGLE:helper@gmail.com:USER

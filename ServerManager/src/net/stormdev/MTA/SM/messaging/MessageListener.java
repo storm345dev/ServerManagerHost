@@ -49,7 +49,7 @@ public class MessageListener implements Listener<MessageEvent> {
 				Scheduler.instance.runTaskAsync(new Runnable(){
 
 					public void run() { //Don't want it pausing the receiving thread (Where the events are called from)
-						StringBuilder toSend = new StringBuilder();
+						StringBuilder toSend = new StringBuilder(",");
 						for(Server s:servers){
 							if(toSend.length() < 1){
 								toSend.append(s.getRaw());
