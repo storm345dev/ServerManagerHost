@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.stormdev</groupId>
   <artifactId>ServerManagerHost</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.2</version>
   <name>ServerManagerHost</name>
   <description>Host server for the bukkit ServerManager tool</description>
   <build>
