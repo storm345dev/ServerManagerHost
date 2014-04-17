@@ -1,19 +1,13 @@
 package configuration;
 
-import static org.bukkit.util.NumberConversions.*;
-
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.bukkit.Color;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
+import java.util.Vector;
 
 /**
  * A type of {@link ConfigurationSection} that is stored in memory.
@@ -56,14 +50,10 @@ public class MemorySection implements ConfigurationSection {
      *     if parent contains no root Configuration.
      */
     protected MemorySection(ConfigurationSection parent, String path) {
-        Validate.notNull(parent, "Parent cannot be null");
-        Validate.notNull(path, "Path cannot be null");
 
         this.path = path;
         this.parent = parent;
         this.root = parent.getRoot();
-
-        Validate.notNull(root, "Path cannot be orphaned");
 
         this.fullPath = createPath(parent, path);
     }
@@ -134,7 +124,6 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public void addDefault(String path, Object value) {
-        Validate.notNull(path, "Path cannot be null");
 
         Configuration root = getRoot();
         if (root == null) {
@@ -160,7 +149,6 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public void set(String path, Object value) {
-        Validate.notEmpty(path, "Cannot set to an empty path");
 
         Configuration root = getRoot();
         if (root == null) {
@@ -199,7 +187,6 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public Object get(String path, Object def) {
-        Validate.notNull(path, "Path cannot be null");
 
         if (path.length() == 0) {
             return this;
@@ -231,7 +218,6 @@ public class MemorySection implements ConfigurationSection {
     }
 
     public ConfigurationSection createSection(String path) {
-        Validate.notEmpty(path, "Cannot create section at empty path");
         Configuration root = getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create section without a root");
@@ -291,14 +277,14 @@ public class MemorySection implements ConfigurationSection {
         return val instanceof String;
     }
 
-    public int getInt(String path) {
+    public int getInt(String path) throws NumberFormatException {
         Object def = getDefault(path);
-        return getInt(path, (def instanceof Number) ? toInt(def) : 0);
+        return getInt(path, (def instanceof Number) ? Integer.parseInt(""+def) : 0);
     }
 
-    public int getInt(String path, int def) {
+    public int getInt(String path, int def) throws NumberFormatException {
         Object val = get(path, def);
-        return (val instanceof Number) ? toInt(val) : def;
+        return (val instanceof Number) ? Integer.parseInt(""+def) : def;
     }
 
     public boolean isInt(String path) {
@@ -321,14 +307,14 @@ public class MemorySection implements ConfigurationSection {
         return val instanceof Boolean;
     }
 
-    public double getDouble(String path) {
+    public double getDouble(String path) throws NumberFormatException {
         Object def = getDefault(path);
-        return getDouble(path, (def instanceof Number) ? toDouble(def) : 0);
+        return getDouble(path, (def instanceof Number) ? Double.parseDouble(""+def) : 0);
     }
 
-    public double getDouble(String path, double def) {
+    public double getDouble(String path, double def) throws NumberFormatException {
         Object val = get(path, def);
-        return (val instanceof Number) ? toDouble(val) : def;
+        return (val instanceof Number) ? Double.parseDouble(""+val) : def;
     }
 
     public boolean isDouble(String path) {
@@ -336,14 +322,14 @@ public class MemorySection implements ConfigurationSection {
         return val instanceof Double;
     }
 
-    public long getLong(String path) {
+    public long getLong(String path) throws NumberFormatException{
         Object def = getDefault(path);
-        return getLong(path, (def instanceof Number) ? toLong(def) : 0);
+        return getLong(path, (def instanceof Number) ? Long.parseLong(""+def) : 0);
     }
 
-    public long getLong(String path, long def) {
+    public long getLong(String path, long def) throws NumberFormatException {
         Object val = get(path, def);
-        return (val instanceof Number) ? toLong(val) : def;
+        return (val instanceof Number) ? Long.parseLong(""+val) : def;
     }
 
     public boolean isLong(String path) {
@@ -614,67 +600,11 @@ public class MemorySection implements ConfigurationSection {
         return result;
     }
 
-    // Bukkit
-    public Vector getVector(String path) {
-        Object def = getDefault(path);
-        return getVector(path, (def instanceof Vector) ? (Vector) def : null);
-    }
-
-    public Vector getVector(String path, Vector def) {
-        Object val = get(path, def);
-        return (val instanceof Vector) ? (Vector) val : def;
-    }
-
     public boolean isVector(String path) {
         Object val = get(path);
         return val instanceof Vector;
     }
-
-    public OfflinePlayer getOfflinePlayer(String path) {
-        Object def = getDefault(path);
-        return getOfflinePlayer(path, (def instanceof OfflinePlayer) ? (OfflinePlayer) def : null);
-    }
-
-    public OfflinePlayer getOfflinePlayer(String path, OfflinePlayer def) {
-        Object val = get(path, def);
-        return (val instanceof OfflinePlayer) ? (OfflinePlayer) val : def;
-    }
-
-    public boolean isOfflinePlayer(String path) {
-        Object val = get(path);
-        return val instanceof OfflinePlayer;
-    }
-
-    public ItemStack getItemStack(String path) {
-        Object def = getDefault(path);
-        return getItemStack(path, (def instanceof ItemStack) ? (ItemStack) def : null);
-    }
-
-    public ItemStack getItemStack(String path, ItemStack def) {
-        Object val = get(path, def);
-        return (val instanceof ItemStack) ? (ItemStack) val : def;
-    }
-
-    public boolean isItemStack(String path) {
-        Object val = get(path);
-        return val instanceof ItemStack;
-    }
-
-    public Color getColor(String path) {
-        Object def = getDefault(path);
-        return getColor(path, (def instanceof Color) ? (Color) def : null);
-    }
-
-    public Color getColor(String path, Color def) {
-        Object val = get(path, def);
-        return (val instanceof Color) ? (Color) val : def;
-    }
-
-    public boolean isColor(String path) {
-        Object val = get(path);
-        return val instanceof Color;
-    }
-
+    
     public ConfigurationSection getConfigurationSection(String path) {
         Object val = get(path, null);
         if (val != null) {
@@ -698,7 +628,9 @@ public class MemorySection implements ConfigurationSection {
     }
 
     protected Object getDefault(String path) {
-        Validate.notNull(path, "Path cannot be null");
+        if(path == null){
+        	throw new RuntimeException("Path cannot be null!");
+        }
 
         Configuration root = getRoot();
         Configuration defaults = root == null ? null : root.getDefaults();
@@ -776,7 +708,6 @@ public class MemorySection implements ConfigurationSection {
      * @return Full path of the section from its root.
      */
     public static String createPath(ConfigurationSection section, String key, ConfigurationSection relativeTo) {
-        Validate.notNull(section, "Cannot create path without a section");
         Configuration root = section.getRoot();
         if (root == null) {
             throw new IllegalStateException("Cannot create path without a root");

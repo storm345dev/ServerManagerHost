@@ -1,6 +1,7 @@
 package configuration.file;
 
-import org.bukkit.configuration.*;
+import configuration.MemoryConfiguration;
+import configuration.MemoryConfigurationOptions;
 
 /**
  * Various settings for controlling the input and output of a {@link

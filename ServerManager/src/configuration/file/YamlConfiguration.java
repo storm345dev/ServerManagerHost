@@ -7,11 +7,9 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
+import configuration.Configuration;
+import configuration.ConfigurationSection;
+import configuration.InvalidConfigurationException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -46,7 +44,9 @@ public class YamlConfiguration extends FileConfiguration {
 
     @Override
     public void loadFromString(String contents) throws InvalidConfigurationException {
-        Validate.notNull(contents, "Contents cannot be null");
+        if(contents == null){
+        	return;
+        }
 
         Map<?, ?> input;
         try {
@@ -168,7 +168,6 @@ public class YamlConfiguration extends FileConfiguration {
      * @throws IllegalArgumentException Thrown if file is null
      */
     public static YamlConfiguration loadConfiguration(File file) {
-        Validate.notNull(file, "File cannot be null");
 
         YamlConfiguration config = new YamlConfiguration();
 
@@ -176,9 +175,7 @@ public class YamlConfiguration extends FileConfiguration {
             config.load(file);
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file , ex);
         }
 
         return config;
@@ -196,16 +193,13 @@ public class YamlConfiguration extends FileConfiguration {
      * @throws IllegalArgumentException Thrown if stream is null
      */
     public static YamlConfiguration loadConfiguration(InputStream stream) {
-        Validate.notNull(stream, "Stream cannot be null");
 
         YamlConfiguration config = new YamlConfiguration();
 
         try {
             config.load(stream);
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         } catch (InvalidConfigurationException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Cannot load configuration from stream", ex);
         }
 
         return config;
