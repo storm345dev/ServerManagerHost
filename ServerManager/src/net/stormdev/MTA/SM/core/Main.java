@@ -20,6 +20,7 @@ public class Main {
 	
 	public static volatile boolean running = false;
 	public volatile boolean ending = false;
+	public static boolean bootstrapped = false;
 	
 	public ConnectionListener connectionListener;
 	public ConnectionManager connections;
@@ -29,27 +30,32 @@ public class Main {
 	
 	private String[] args;
 	
-	public Main(String[] args){
+	public Main(String[] args, boolean bootstrapped){
 		this.args = args;
+		Main.bootstrapped = bootstrapped;
 		running = true;
 	}
 	
 	public void begin(){
 		if(!onLoad(args)){
-			System.exit(0);
+			if(!bootstrapped){
+				System.exit(0);
+			}
 			return; //Terminate the program
 		}
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(){
-			
-			@Override
-			public void run(){
-				if(!ending){
-					end();
+		if(!bootstrapped){
+			Runtime.getRuntime().addShutdownHook(new Thread(){
+				
+				@Override
+				public void run(){
+					if(!ending){
+						end();
+					}
+					return;
 				}
-				return;
-			}
-		});
+			});
+		}
 		
 		start();
 		return;
@@ -110,7 +116,8 @@ public class Main {
 		
 		Core.logger.info("Running!");
 		
-		Scheduler.instance.runTaskAsync(new Runnable(){
+		if(!bootstrapped){
+			Scheduler.instance.runTaskAsync(new Runnable(){
 
 			public void run() {
 				new InputListener();
@@ -141,6 +148,7 @@ public class Main {
 				}
 				return;
 			}});
+		}
 		this.accAuths = new AccountAuthentication();
 		return true;
 	}

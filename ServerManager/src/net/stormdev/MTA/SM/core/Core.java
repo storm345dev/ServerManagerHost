@@ -16,7 +16,7 @@ public class Core {
 			return;
 		}
 		else{
-			instance = new Main(args);
+			instance = new Main(args, false);
 			instance.begin();
 		}
 		int amt = Scheduler.instance.shutdownNow().size();
