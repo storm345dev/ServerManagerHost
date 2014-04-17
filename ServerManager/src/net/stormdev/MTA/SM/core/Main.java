@@ -172,6 +172,7 @@ public class Main {
 		connectionListener.close();
 		ending = true;
 		running = false;
+		Core.logger.info("Terminated!");
 	}
 	
 	public void onTick(){
