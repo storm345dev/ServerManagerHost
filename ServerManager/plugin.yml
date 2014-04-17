@@ -1,0 +1,4 @@
+name: SMHost
+version: 0.2
+author: storm345
+main: net.stormdev.MTA.SM.bootstrap.Bungee

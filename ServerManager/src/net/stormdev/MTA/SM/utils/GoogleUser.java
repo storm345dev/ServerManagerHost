@@ -6,7 +6,7 @@ import net.stormdev.MTA.SM.http.SimpleHttpClient;
 
 public class GoogleUser {
 	
-	private static final DeployType deploy = DeployType.ONLINE;
+	private static final DeployType deploy = DeployType.LOCAL;
 	private static final String authURL; //TODO To be changed when launched...
 	static {
 		switch(deploy){
