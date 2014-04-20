@@ -173,6 +173,21 @@ public class MessageListener implements Listener<MessageEvent> {
 					return;
 				}
 			}
+			else if(title.equals("kickPlayer")){
+				if(!checkConPerm(con, AuthLevel.ADMIN)){
+					return;
+				}
+			}
+			else if(title.equals("warnPlayer")){
+				if(!checkConPerm(con, AuthLevel.ADMIN)){
+					return;
+				}
+			}
+			else if(title.equals("banPlayer")){
+				if(!checkConPerm(con, AuthLevel.ADMIN)){
+					return;
+				}
+			}
 			sendTo.add(conTo); //Just send it to who it asked for
 		}
 		
