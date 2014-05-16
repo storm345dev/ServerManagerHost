@@ -188,6 +188,17 @@ public class MessageListener implements Listener<MessageEvent> {
 					return;
 				}
 			}
+			else if(title.equals("getFileList")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
+			else if(title.equals("getFile")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
+			
 			sendTo.add(conTo); //Just send it to who it asked for
 		}
 		
