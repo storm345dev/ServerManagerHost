@@ -198,6 +198,21 @@ public class MessageListener implements Listener<MessageEvent> {
 					return;
 				}
 			}
+			else if(title.equals("renameFile")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
+			else if(title.equals("deleteFile")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
+			else if(title.equals("uploadFile")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
 			
 			sendTo.add(conTo); //Just send it to who it asked for
 		}
