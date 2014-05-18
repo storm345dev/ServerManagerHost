@@ -213,6 +213,11 @@ public class MessageListener implements Listener<MessageEvent> {
 					return;
 				}
 			}
+			else if(title.equals("newFolder")){
+				if(!checkConPerm(con, AuthLevel.OPERATOR)){
+					return;
+				}
+			}
 			
 			sendTo.add(conTo); //Just send it to who it asked for
 		}
