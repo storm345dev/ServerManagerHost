@@ -22,7 +22,7 @@ public class ConnectionManager {
 	}
 	
 	public synchronized void closeAll(){
-		for(Connection con:connections.values()){
+		for(Connection con:new ArrayList<Connection>(connections.values())){
 			con.disconnect();
 		}
 	}
