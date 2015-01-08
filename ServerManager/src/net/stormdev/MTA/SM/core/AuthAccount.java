@@ -22,7 +22,13 @@ public class AuthAccount {
 		String perm = parts[2];
 		
 		this.name = parts[1];
-		this.type = AuthType.valueOf(type);
+		if(type.equalsIgnoreCase("GOOGLE")){
+			this.type = AuthType.STORMDEV;
+			System.out.println("WARNING: Accounts on MineManager now use StormDev accounts! Email "+name+" is being used as they were defined as a google account! To remove this message, change 'GOOGLE' accounts in the users.txt to 'STORMDEV' accounts");
+		}
+		else {
+			this.type = AuthType.valueOf(type);
+		}
 		this.level = AuthLevel.valueOf(perm);
 		if(type == null || level == null){
 			throw new Exception("Invalid!");
