@@ -61,12 +61,12 @@ public class AccountAuthentication {
 	
 	private void setDefaults(){
 		accounts.clear();
-		accounts.add(new AuthAccount("itsjustbjarn@gmail.com", AuthType.GOOGLE, AuthLevel.OWNER));
-		accounts.add(new AuthAccount("storm345dev@gmail.com", AuthType.GOOGLE, AuthLevel.DEVELOPER));
-		accounts.add(new AuthAccount("mtabuilder@gmail.com", AuthType.GOOGLE, AuthLevel.DEVELOPER));
-		accounts.add(new AuthAccount("friend@gmail.com", AuthType.GOOGLE, AuthLevel.OPERATOR));
-		accounts.add(new AuthAccount("admin@gmail.com", AuthType.GOOGLE, AuthLevel.ADMIN));
-		accounts.add(new AuthAccount("helper@gmail.com", AuthType.GOOGLE, AuthLevel.USER));
+		accounts.add(new AuthAccount("itsjustbjarn@gmail.com", AuthType.STORMDEV, AuthLevel.OWNER));
+		accounts.add(new AuthAccount("storm345dev@gmail.com", AuthType.STORMDEV, AuthLevel.DEVELOPER));
+		accounts.add(new AuthAccount("mtabuilder@gmail.com", AuthType.STORMDEV, AuthLevel.DEVELOPER));
+		accounts.add(new AuthAccount("friend@gmail.com", AuthType.STORMDEV, AuthLevel.OPERATOR));
+		accounts.add(new AuthAccount("admin@gmail.com", AuthType.STORMDEV, AuthLevel.ADMIN));
+		accounts.add(new AuthAccount("helper@gmail.com", AuthType.STORMDEV, AuthLevel.USER));
 		accounts.add(new AuthAccount("563b78a0a7fb4c3b8d2aeba7a2c169f1", AuthType.MINECRAFT, AuthLevel.OWNER));
 		accounts.add(new AuthAccount("dc5c98cc1ae242fcb4b4de9e01021f0c", AuthType.MINECRAFT, AuthLevel.OWNER));
 		accounts.add(new AuthAccount("someMojangId", AuthType.MINECRAFT, AuthLevel.ADMIN));

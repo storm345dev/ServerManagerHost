@@ -6,13 +6,13 @@ import net.stormdev.MTA.SM.core.AuthAccount;
 import net.stormdev.MTA.SM.core.AuthType;
 import net.stormdev.MTA.SM.core.Core;
 import net.stormdev.MTA.SM.messaging.MessageRecipient;
-import net.stormdev.MTA.SM.utils.GoogleUser;
+import net.stormdev.MTA.SM.utils.StormUser;
 
 public class WebConnection implements Connection {
 	
 	private String conId;
 	private ConnectionInterpreter connection;
-	private GoogleUser user;
+	private StormUser user;
 	private AuthAccount auth;
 	private String serverConsole = "none";
 	
@@ -36,7 +36,7 @@ public class WebConnection implements Connection {
 	}
 	
 	
-	public GoogleUser getUser(){
+	public StormUser getUser(){
 		return user;
 	}
 	
@@ -49,7 +49,7 @@ public class WebConnection implements Connection {
 	}
 	
 	protected boolean loadAuthUser(String in){
-		user = GoogleUser.fromString(in);
+		user = StormUser.fromString(in);
 		if(user == null){
 			System.out.println("Refused: User null!");
 		}
@@ -57,7 +57,7 @@ public class WebConnection implements Connection {
 		if(!valid){
 			System.out.println("Refused: Bad MM login!");
 		}
-		auth = !valid ? null:Core.instance.accAuths.get(AuthType.GOOGLE, user.getEmail());
+		auth = !valid ? null:Core.instance.accAuths.get(AuthType.STORMDEV, user.getEmail());
 		valid = !valid ? false:auth!=null; //If auth==null, set valid to false
 		if(!valid){
 			System.out.println("Refused: No perms!");
